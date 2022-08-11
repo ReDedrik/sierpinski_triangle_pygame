@@ -2,6 +2,7 @@ import pygame
 import sys
 from math import sqrt
 import random as rd
+import time
 
 pygame.init()
 
@@ -79,7 +80,7 @@ Line(corner1, corner3)
 
 next_point = (corner1[0] + 50, corner1[1])
 Dot(next_point)
-
+pygame.display.update()
 
 ###
 ### game loop (update)
@@ -87,6 +88,8 @@ Dot(next_point)
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
+    if i <= 10:
+        time.sleep(0.5)
     if i <= dots:
         vertex = random_vertex()
         next_point = draw_new_point(next_point, vertex)
