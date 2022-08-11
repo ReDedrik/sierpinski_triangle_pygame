@@ -24,20 +24,54 @@ screen.fill(white)
 ###
 ### Dot function to draw dots at specified location
 ###
-def Dot(x, size = dotsize):
-    pygame.draw.circle(screen, black, (x[0], x[1]), size)
-
-def Line(point1, point2):
-    pygame.draw.line(screen, black, point1, point2)
 
 
 ###
 ### establishing the corners
 ###
+
+class Endpoint:
+    instances = []
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.coords = (x, y)
+        Endpoint.instances.append(self)
+    
+    @staticmethod
+    def random_point():
+        num = rd.randint(1, len(Endpoint.instances))
+        return Endpoint.instances[num]
+
+    def Dot(self):
+        pygame.draw.circle(screen, black, self.coords, 2)
+
+    def Line(self, pt):
+        pygame.draw.line(screen, black, self.coords, pt.coords)
+
+    @staticmethod
+    def equilateral_triangle(length):
+        screen_x = width
+        screen_y = height
+        center_of_screen = (screen_x / 2, screen_y / 2)
+        pygame.draw.circle(screen, black, center_of_screen, 2)
+
+        pt1 = Endpoint(center_of_screen[0] - length / 2, center_of_screen[1] + (sqrt(3) / 2) * (1/2) * length)
+        pt2 = Endpoint(center_of_screen[0] + length / 2, center_of_screen[1] + (sqrt(3) / 2) * (1/2) * length)
+        pt3 = Endpoint(center_of_screen[0], center_of_screen[1] - (sqrt(3) / 2) * (1/2) * length)
+        Endpoint.instances.append(pt1)
+        Endpoint.instances.append(pt2)
+        Endpoint.instances.append(pt3)
+        pt1.Dot()
+        pt2.Dot()
+        pt3.Dot()
 y_offset = 75
 corner1 = (75, height - y_offset)
 corner2 = (corner1[0] + (width - y_offset * 2), corner1[1])
 corner3 = ((corner1[0] + corner2[0]) / 2, height - y_offset - sqrt((corner2[0] - corner1[0])**2 - ((corner1[0] + corner2[0]) / 2)**2))
+
+corner1 = Endpoint(75, height - y_offset)
+
 
 ###
 ### function to pick first random point
@@ -70,16 +104,16 @@ def draw_new_point(point1, point2):
     return (x_value, y_value)
 
 
-Dot(corner1, 2)
-Dot(corner2, 2)
-Dot(corner3, 2)
-Line(corner1, corner2)
-Line(corner2, corner3)
-Line(corner1, corner3)
+#Dot(corner1, 2)
+#Dot(corner2, 2)
+#Dot(corner3, 2)
+#Line(corner1, corner2)
+#Line(corner2, corner3)
+#Line(corner1, corner3)
 
-
-next_point = (corner1[0] + 50, corner1[1])
-Dot(next_point)
+Endpoint.equilateral_triangle(800)
+#next_point = (corner1[0] + 50, corner1[1])
+#Dot(next_point)
 pygame.display.update()
 
 ###
@@ -92,8 +126,8 @@ while True:
         time.sleep(0.5)
     if i <= dots:
         vertex = random_vertex()
-        next_point = draw_new_point(next_point, vertex)
-        Dot(next_point)
+        #next_point = draw_new_point(next_point, vertex)
+        #Dot(next_point)
     i += 1
     pygame.display.update()
 
