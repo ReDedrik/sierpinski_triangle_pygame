@@ -9,7 +9,7 @@ pygame.init()
 ### creating canvas and establishing variables
 ###
 i = 0
-dots = 100000
+dots = 30000
 dotsize = 1
 height, width = 800, 800
 size = (height, width)
@@ -25,6 +25,10 @@ screen.fill(white)
 ###
 def Dot(x, size = dotsize):
     pygame.draw.circle(screen, black, (x[0], x[1]), size)
+
+def Line(point1, point2):
+    pygame.draw.line(screen, black, point1, point2)
+
 
 ###
 ### establishing the corners
@@ -44,6 +48,9 @@ def first_point(pt1, pt2, pt3):
             s * pt1[1] + t * pt2[1] + u * pt3[1])
 
 
+###
+### function to pick a random vertex
+###
 def random_vertex():
     num = rd.randint(1, 3)
     if num == 1:
@@ -53,18 +60,30 @@ def random_vertex():
     if num == 3:
         return corner3
 
+###
+### function to find the new midpoint
+###
 def draw_new_point(point1, point2):
     x_value = (point1[0] + point2[0]) / 2
     y_value = (point1[1] + point2[1]) / 2
     return (x_value, y_value)
 
 
-fp = first_point(corner1, corner2, corner3)
-Dot(corner1, 3)
-Dot(corner2, 3)
-Dot(corner3, 3)
-Dot(fp)
-next_point = fp
+Dot(corner1, 2)
+Dot(corner2, 2)
+Dot(corner3, 2)
+Line(corner1, corner2)
+Line(corner2, corner3)
+Line(corner1, corner3)
+
+
+next_point = (corner1[0] + 50, corner1[1])
+Dot(next_point)
+
+
+###
+### game loop (update)
+###
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
@@ -72,9 +91,6 @@ while True:
         vertex = random_vertex()
         next_point = draw_new_point(next_point, vertex)
         Dot(next_point)
-
-
-
     i += 1
     pygame.display.update()
 
