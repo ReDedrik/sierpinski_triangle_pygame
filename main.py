@@ -90,8 +90,8 @@ class Endpoint:
 ### function to pick first random point
 ###
 def first_point(list_of_pts):
-    if len(list_of_pts) == 4:
-        return (rd.randint(list_of_pts[0].coords[0], list_of_pts[1].coords[0]), rd.randint(list_of_pts[3].coords[1], list_of_pts[0].coords[1]))
+    if len(list_of_pts) >= 4:
+        return (rd.randrange(int(list_of_pts[0].coords[0]), int(list_of_pts[1].coords[0])), rd.randrange(int(list_of_pts[3].coords[1]), int(list_of_pts[0].coords[1])))
     else:
         pt1 = list_of_pts[0].coords
         pt2 = list_of_pts[1].coords
@@ -119,15 +119,29 @@ def pick_random_vertex(vertex):
         return previous_point
     if len(Endpoint.instances) == 3:
         return rd.randint(0, len(Endpoint.instances) - 1)
-    else:
-        num_list.remove(num_list[(vertex + 1) % (len(num_list))])
-        num_list.remove(num_list[(vertex + (len(num_list) - 1)) % len(num_list)])
+    elif len(Endpoint.instances) == 5:
+        if vertex == 0:
+            num_list.remove(1)
+            num_list.remove(4)
+        elif vertex == 1:
+            num_list.remove(2)
+            num_list.remove(0)
+        elif vertex == 2:
+            num_list.remove(1)
+            num_list.remove(3)
+        elif vertex == 3:
+            num_list.remove(2)
+            num_list.remove(4)
+        elif vertex == 4:
+            num_list.remove(0)
+            num_list.remove(3)
+
         return rd.choice(num_list)
 
 
-#Endpoint.pentagon(350)
+Endpoint.pentagon(350)
 #Endpoint.square(700)
-Endpoint.equilateral_triangle(600)
+#Endpoint.equilateral_triangle(600)
 pygame.display.update()
 
 fp = first_point(Endpoint.instances)
@@ -141,7 +155,7 @@ vertex = 1
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
-    if i <= 10:
+    if i <= 7:
         time.sleep(0.3)
     if i <= dots:
         vertex = pick_random_vertex(vertex)
