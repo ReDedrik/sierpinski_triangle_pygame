@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import pygame
 import sys
 from math import sqrt
@@ -9,6 +10,9 @@ pygame.init()
 ###
 ### creating canvas and establishing variables
 ###
+global first
+first = True
+
 i = 0
 dots = 30000
 dotsize = 1
@@ -33,6 +37,8 @@ def dot(coords):
 
 class Endpoint:
     instances = []
+    first = True
+    num = 0
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -41,8 +47,15 @@ class Endpoint:
     
     @staticmethod
     def random_vertex():
-        num = rd.randint(1, len(Endpoint.instances) - 1)
-        return Endpoint.instances[num]
+        if len(Endpoint.instances) >= 4 and Endpoint.first == False:
+            if int(Endpoint.num) // 2 == 0:
+                Endpoint.num = rd.choice([Endpoint.instances[Endpoint.num + 1], Endpoint.instances[(Endpoint.num + 2) % 4]])
+                return(Endpoint.num)
+            else:
+                Endpoint.num = rd.choice([Endpoint.instances[Endpoint.num - 1], Endpoint.instances[(Endpoint.num + 2) % 4]])
+        Endpoint.num = rd.randint(0, len(Endpoint.instances) - 1)
+        Endpoint.first = False
+        return Endpoint.instances[Endpoint.num]
 
     def Dot(self):
         pygame.draw.circle(screen, black, self.coords, 2)
