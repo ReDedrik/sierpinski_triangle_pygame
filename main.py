@@ -11,7 +11,7 @@ pygame.init()
 ###
 i = 0
 previous_point = -1
-dots = 30000
+dots = 100000
 dotsize = 1
 height, width = 800, 800
 size = (height, width)
@@ -72,6 +72,7 @@ class Endpoint:
         Endpoint.Line(s_pt1, s_pt2, s_pt4)
         Endpoint.Line(s_pt3, s_pt2, s_pt4)
 
+    @staticmethod
     def pentagon(length):
         center_of_screen = (width / 2, height / 2)
         h = (length / 2) / math.cos(54 * math.pi / 180)
@@ -85,6 +86,19 @@ class Endpoint:
         Endpoint.Line(p_pt4, p_pt5)
         for i in Endpoint.instances:
             i.Dot()
+            
+    """        
+    @staticmethod
+    def mystery_shape(pt_list_):
+        pt_list = []
+        for i in pt_list_:
+            pt_list.append((i[0], height + -1 * i[1]))
+        for i in pt_list:
+            print(type(i))
+            Endpoint(i)
+        for i in Endpoint.instances:
+            i.Dot()
+    """
         
 ###
 ### function to pick first random point
@@ -113,35 +127,22 @@ def pick_random_vertex(vertex):
     num_list = []
     for i in range(len(Endpoint.instances)):
         num_list.append(i)
-    if len(Endpoint.instances) == 4:
-        num_list.remove(vertex)
-        previous_point = rd.choice(num_list)
-        return previous_point
     if len(Endpoint.instances) == 3:
-        return rd.randint(0, len(Endpoint.instances) - 1)
-    elif len(Endpoint.instances) == 5:
-        if vertex == 0:
-            num_list.remove(1)
-            num_list.remove(4)
-        elif vertex == 1:
-            num_list.remove(2)
-            num_list.remove(0)
-        elif vertex == 2:
-            num_list.remove(1)
-            num_list.remove(3)
-        elif vertex == 3:
-            num_list.remove(2)
-            num_list.remove(4)
-        elif vertex == 4:
-            num_list.remove(0)
-            num_list.remove(3)
-
         return rd.choice(num_list)
+    
+    num_list.remove(vertex)
+    previous_point = rd.choice(num_list)
+    return previous_point
+
+        
 
 
 Endpoint.pentagon(350)
 #Endpoint.square(700)
 #Endpoint.equilateral_triangle(600)
+
+
+
 pygame.display.update()
 
 fp = first_point(Endpoint.instances)
